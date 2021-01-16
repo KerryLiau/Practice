@@ -1,7 +1,9 @@
-#include <iostream>
+#include "src/permutation/Factorial.cpp"
+#include "third_party_lib/json/CJsonObject/CJsonObject.hpp"
+#include "src/JsonDemo.cpp"
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    TestJson::Run();
     return 0;
 }

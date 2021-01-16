@@ -21,8 +21,8 @@ void Run()
 {
     auto begin = std::chrono::high_resolution_clock::now();
 
-    auto async_1 = std::async(std::launch::async, async, 1000000);
-    auto async_2 = std::async(std::launch::async, async, 1000000);
+    auto async_1 = std::async(std::launch::async, Async, 1000000);
+    auto async_2 = std::async(std::launch::async, Async, 1000000);
 
     std::cout << async_1.get() << std::endl;
     std::cout << async_2.get() << std::endl;

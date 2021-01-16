@@ -15,20 +15,35 @@ long factorial(int n)
 }
 long combination(int m, int n)
 {
-    int sub = m - n;
-    auto sf = factorial(sub);
-    auto mf = factorial(m);
-    auto nf = factorial(n);
-    return mf / (nf * sf);
+    try
+    {
+        int sub = m - n;
+        auto sf = factorial(sub);
+        auto mf = factorial(m);
+        auto nf = factorial(n);
+        std::cout << "mf: " << mf << ", nf: " << nf << ", sf: " << sf << std::endl;
+        return mf / (nf * sf);
+    } catch (const std::exception& e)
+    {
+        std::cout << "err: " << e.what() << std::endl;
+        throw e;
+    }
 }
 long permutation(int m, int n)
 {
-    auto mf = factorial(m);
-    auto nf = factorial(n);
-    return mf / nf;
+    try
+    {
+        auto mf = factorial(m);
+        auto nf = factorial(n);
+        return mf / nf;
+    } catch (const std::exception& e)
+    {
+        std::cout << "err: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
-void MainTest()
+void Run()
 {
-    std::cout << "Hello" << std::endl;
+    std::cout << combination(7, 3) << std::endl;
 }
