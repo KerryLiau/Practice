@@ -5,30 +5,44 @@
 #include "iostream"
 #include "future"
 
-std::mutex mutex;
-
-int Async(int i) {
-    std::this_thread::sleep_for(std::chrono::microseconds(i));
-    std::lock_guard<std::mutex> lockGuard(mutex);// safe way, will unlock when exception throw or error occurred
-
-//    mutex.lock();// not safe, cause dead lock when exception throw or error occurred
-    std::cout << "i = " << i << std::endl;
-//    mutex.unlock();// not safe, cause dead lock when exception throw or error occurred
-    return i;
-}
-
-void Run()
+class TestSync
 {
-    auto begin = std::chrono::high_resolution_clock::now();
+    std::unique_ptr<std::mutex> mutex;
+    int Sync(int i) {
+        std::this_thread::sleep_for(std::chrono::microseconds(i));
+        /*
+         * 兩種使用 std::mutex 的方式:
+         * 1. mutex.lock & mutex.unlock
+         * 2. std::lock_guard<std::mutex> | std::unique_lock<std::mutex>
+         * 第一種方式不安全，因為當發生錯誤或例外拋出時，會造成死鎖
+         * 第二種方式比較安全，當發生錯誤或例外拋出時，會進行解鎖
+         */
+        std::unique_lock<std::mutex> lockGuard(*mutex);
+        std::cout << "i = " << i << std::endl;
+        return i;
+    }
 
-    auto async_1 = std::async(std::launch::async, Async, 1000000);
-    auto async_2 = std::async(std::launch::async, Async, 1000000);
+public:
+    TestSync()
+    {
+        mutex = std::make_unique<std::mutex>();
+    };
+    static void Run()
+    {
+        auto test_sync = std::make_unique<TestSync>();
+        auto begin = std::chrono::high_resolution_clock::now();
+        for (auto i = 0; i < 5; i++)
+        {
+            auto async_work = std::async(std::launch::async, [&test_sync] () {
+                return test_sync->Sync(1000000);
+            });
+            std::cout << async_work.get() << std::endl;
+        }
 
-    std::cout << async_1.get() << std::endl;
-    std::cout << async_2.get() << std::endl;
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << std::endl;
+        auto end = std::chrono::high_resolution_clock::now();
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << std::endl;
 
 //    std::cin.get();
-}
+    }
+};
+//std::unique_ptr<std::mutex> TestSync::mutex;
