@@ -29,6 +29,7 @@ public:
     };
     static void Run()
     {
+        std::cout << "============================= " << "Test Synchronize" << " =============================" << std::endl;
         auto test_sync = std::make_unique<TestSync>();
         auto begin = std::chrono::high_resolution_clock::now();
         for (auto i = 0; i < 5; i++)

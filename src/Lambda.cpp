@@ -9,6 +9,7 @@ class TestLambda
 public:
     static void Run()
     {
+        std::cout << "============================= " << "Test Lambda" << " =============================" << std::endl;
         LambdaFunctionVariable();
         LambdaCaller([]()
         {

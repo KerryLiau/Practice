@@ -10,6 +10,7 @@ class TestAsync {
 public:
     static void Run()
     {
+        std::cout << "============================= " << "Test Asynchronous" << " =============================" << std::endl;
         auto begin = std::chrono::high_resolution_clock::now();
         // use std::launch::async to asynchronous thread
         auto async_1 = std::async(std::launch::async, Async, 1);
