@@ -28,8 +28,8 @@ public:
         json_array.Add(name_key);
         json_array.Add(name);
         std::cout << "JSON array string: " << json_array.ToString() << std::endl;
-        std::cout << "pretty JSON array: " << '\n' << PrettyPrint(&json_array) << std::endl;
-        std::cout << "pretty JSON object: " << '\n' << PrettyPrint(&json_object) << std::endl;
+        std::cout << "pretty JSON array: " << '\n' << PrettyJson(&json_array) << std::endl;
+        std::cout << "pretty JSON object: " << '\n' << PrettyJson(&json_object) << std::endl;
         auto json_str = R"(
         {
             "name":"Marry"
@@ -37,7 +37,7 @@ public:
         )";
         auto marry_json = neb::CJsonObject(json_str);
         std::cout << "marry json: \n" << marry_json.ToFormattedString() << std:: endl;
-        std::cout << "marry pretty json: \n" << PrettyPrint(&marry_json) << std:: endl;
+        std::cout << "marry pretty json: \n" << PrettyJson(&marry_json) << std:: endl;
     }
 
 private:
@@ -47,17 +47,15 @@ private:
         return str.replace(0, 1, "").replace(length - 2, length - 1, "");
     }
 
-    static auto PrettyPrint(neb::CJsonObject&& jsonObject) -> std::string
+    static auto PrettyJson(neb::CJsonObject&& jsonObject) -> std::string
     {
-        return PrettyPrint(&jsonObject, 2);
+        return PrettyPrint(&jsonObject);
     }
 
-    static auto PrettyPrint(neb::CJsonObject&& jsonObject, const int& spacePerIndent) -> std::string
+    static auto PrettyPrint(neb::CJsonObject&& jsonObject) -> std::string
     {
         auto space = std::string();
-        for (auto i = 0; i < spacePerIndent; ++i) {
-            space += " ";
-        }
+        space += "  ";
         std::stringstream result;
         auto json_str = jsonObject.ToString();
         auto level = 0;
